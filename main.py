@@ -16,6 +16,7 @@ def menu():
   ->"""
   return input(menu)
 
+# receber os argumentos apenas por posição
 def depositar(saldo, valor, extrato, /):
   if valor > 0:
     # digitar a conta
@@ -26,7 +27,7 @@ def depositar(saldo, valor, extrato, /):
     print("\n@@@ Operação falhou! O valor informado é inválido. @@@")
   return saldo, extrato
   
-
+# receber argumentos apenas por nome
 def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
   excedeu_saldo = valor > saldo
   excedeu_limite = valor > limite
@@ -52,7 +53,10 @@ def extrato(saldo, /, *, extrato):
   print("Não foram realizadas movimentações." if not extrato else extrato)
   print(f"\nSaldo: R$ {saldo:.2f}")
   print("=========================================")
+
   
+# Criar conta Corrente
+## O programa deve armazenar contas em uma lista, uma conta é composta por: agência, nro. da conta, nome do usuário. O número da conta é sequencial iniciando em 1. O número da agência é fixo: '0001'. O usuário pode ter mais de uma conta, mas uma conta pode ter apenas um usuário.
 def criar_usuario(usuarios):
   cpf = input("Informe o CPF (somente número): ")
   usuario = filtrar_usuario(cpf, usuarios)
@@ -69,10 +73,13 @@ def criar_usuario(usuarios):
 
   print("=== Usuário criado com sucesso! ===")
 
+# Para vincular um usuário a uma conta filtre a lista de usuários buscando o número de CPF informado para cada usuário da lista.
 def filtrar_usuario(cpf, usuarios):
   usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
   return usuarios_filtrados[0] if usuarios_filtrados else None
 
+# Criar Usuário
+## O programa deve armazenar os usuários em uma lista, um usuário é composto por: nome, data de nascimento, CPF e endereço. O endereço é uma string contendo o logradouro, o nro, o bairro, a cidade/sigla do estado. Deve ser armazenado somente os números do CPF. Não podemos cadastrar 2 usuários com o mesmo CPF.
 def criar_conta(agencia, numero_conta, usuarios):
   cpf = input("Informe o CPF do usuário: ")
   usuario = filtrar_usuario(cpf, usuarios)
@@ -105,6 +112,7 @@ def listar_contas(contas):
     print("=" * 100)
     print(textwrap.dedent(linha))
 
+
 def main():
   LIMITE_SAQUES = 3
   AGENCIA = "0001"
@@ -125,14 +133,7 @@ def main():
 
     elif opcao == "s":
       valor = float(input("Informe o valor do saque: "))
-      saldo, extrato = sacar(
-        saldo=saldo,
-        valor=valor,
-        extrato=extrato,
-        limite=limite,
-        numero_saques=numero_saques,
-        limite_saques=LIMITE_SAQUES,
-      )
+      saldo, extrato = sacar(saldo=saldo, valor=valor, extrato=extrato, limite=limite, numero_saques=numero_saques, limite_saques=LIMITE_SAQUES)
 
     elif opcao == "e":
       extrato(saldo, extrato=extrato)
@@ -141,9 +142,7 @@ def main():
       criar_usuario(usuarios)
 
     elif opcao == "nc":
-      numero_conta = len(contas) + 1
-      conta = criar_conta(AGENCIA, numero_conta, usuarios)
-
+      conta = criar_conta(AGENCIA, len(contas) + 1, usuarios)
       if conta:
         contas.append(conta)
 
@@ -158,6 +157,7 @@ def main():
 
     else:
       print("Operação inválida, por favor selecione novamente a operação desejada.")
+
 
 if __name__ == "__main__":
   main()
